@@ -1,5 +1,6 @@
 import tensorflow as tf
-from utils.tf_utils import activation_fun
+from ..utils.tf_utils import activation_fun
+
 
 def UNET(nb_classes, inputs):
     """Compile a UNET model.

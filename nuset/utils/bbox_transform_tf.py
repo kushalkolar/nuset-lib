@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 # originally from https://github.com/tryolabs/luminoth/blob/master/luminoth/models/fasterrcnn/
 def get_width_upright(bboxes):
     with tf.name_scope('BoundingBoxTransform/get_width_upright'):

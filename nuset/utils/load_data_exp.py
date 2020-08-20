@@ -1,5 +1,5 @@
 import pickle
-from utils.normalization import whole_image_norm, foreground_norm 
+from .normalization import whole_image_norm, foreground_norm
 from tqdm import tqdm
 from os import listdir
 from PIL import Image
@@ -7,7 +7,7 @@ import numpy as np
 from scipy.ndimage.measurements import label
 from scipy import ndimage
 import copy
-
+b
 def list_files(directory, extension):
     return [f for f in listdir(directory) if f.endswith('.' + extension)]
 

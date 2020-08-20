@@ -1,5 +1,4 @@
-import pickle
-from utils.normalization import whole_image_norm, foreground_norm 
+from .normalization import whole_image_norm, foreground_norm
 from tqdm import tqdm
 from os import listdir
 from PIL import Image

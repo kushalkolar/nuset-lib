@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # originally from https://github.com/tryolabs/luminoth/blob/master/luminoth/models/fasterrcnn/
 def get_bbox_properties(bboxes):
     """Get bounding boxes width, height and center point.

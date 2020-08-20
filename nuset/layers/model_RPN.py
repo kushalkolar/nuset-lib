@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from utils.tf_utils import optimizer_fun, activation_fun
+from ..utils.tf_utils import optimizer_fun, activation_fun
 
 
 def RPN(feat_map, num_refanchors):

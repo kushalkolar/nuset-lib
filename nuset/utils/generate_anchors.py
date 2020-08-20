@@ -1,5 +1,5 @@
 import tensorflow as tf
-import numpy as np
+
 
 # originally from https://github.com/tryolabs/luminoth/blob/master/luminoth/models/fasterrcnn/
 def generate_anchors(anchors_reference, anchor_stride, feature_map_shape):

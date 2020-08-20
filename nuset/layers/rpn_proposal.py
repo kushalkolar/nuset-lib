@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from utils.bbox_transform_tf import decode, clip_boxes, change_order
+from ..utils.bbox_transform_tf import decode, clip_boxes, change_order
 
 
 def RPNProposal(rpn_cls_prob, rpn_bbox_pred, all_anchors, im_shape, nms_threshold):

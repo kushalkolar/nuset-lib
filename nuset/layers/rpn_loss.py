@@ -1,5 +1,7 @@
-from utils.losses import smooth_l1_loss
+from ..utils.losses import smooth_l1_loss
 import tensorflow as tf
+
+
 def RPNLoss(prediction_dict):
     """
     Returns cost for Region Proposal Network based on:

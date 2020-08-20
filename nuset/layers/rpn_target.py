@@ -1,7 +1,7 @@
 import tensorflow as tf
 
-from utils.bbox_overlap import bbox_overlap_tf
-from utils.bbox_transform_tf import encode as encode_tf
+from ..utils.bbox_overlap import bbox_overlap_tf
+from ..utils.bbox_transform_tf import encode as encode_tf
 
 
 def RPNTarget(all_anchors, num_anchors, gt_boxes, im_shape):
