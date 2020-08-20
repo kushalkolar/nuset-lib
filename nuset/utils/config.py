@@ -12,13 +12,13 @@ else:
 DIR = os.path.join(os.environ[HOME], '.nuset')
 
 if not os.path.isdir(DIR):
-    os.makedirs(DIR)
+    os.makedirs(DIR, exist_ok=True)
 
 # store the default network files here
-DEFAULT_NETWORK_DIR = os.path.join(DIR, 'models', 'default')
+DEFAULT_NETWORK_DIR = os.path.join(DIR, 'networks', 'default')
 
 if not os.path.isdir(DEFAULT_NETWORK_DIR):
-    os.makedirs(DIR)
+    os.makedirs(DEFAULT_NETWORK_DIR, exist_ok=True)
 
 # default network files
 _default_network_fnames = \
