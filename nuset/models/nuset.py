@@ -6,6 +6,7 @@ from skimage import transform
 from tqdm import tqdm
 import os
 from glob import glob
+from typing import *
 
 from ..layers.models import UNET
 from ..layers.model_RPN import RPN
@@ -31,6 +32,15 @@ class Nuset(BaseModel):
             self,
             network_path: str = None,
     ):
+        """
+        NuSeT Model
+
+        Parameters
+        ----------
+        network_path : Optional[str]
+            Path to a dir containing a trained network
+
+        """
         super().__init__()
 
         self._network_path_whole_norm: str = None
