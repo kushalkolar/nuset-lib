@@ -1,5 +1,6 @@
 import os
-
+import wget
+import requests
 
 if os.name == 'nt':
     IS_WINDOWS = True
@@ -33,7 +34,8 @@ _default_network_fnames = \
 
 
 def _download_network_file(fname: str):
-    pass
+    print('Downloading default network file')
+    wget.download(f'https://zenodo.org/record/______/files/{fname}')
 
 
 for _f in _default_network_fnames:
