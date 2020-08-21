@@ -1,0 +1,8 @@
+scikit-image~=0.15.0
+numpy
+Pillow
+tqdm
+tifffile
+wget
+matplotlib
+
