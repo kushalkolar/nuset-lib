@@ -3,6 +3,6 @@ numpy
 Pillow
 tqdm
 tifffile
-wget
+requests
 matplotlib
 
