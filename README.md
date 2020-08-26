@@ -1,10 +1,13 @@
 # nuset-lib
+[![PyPI version](https://badge.fury.io/py/nuset-lib)](https://badge.fury.io/py/nuset-lib)
 
 NuSeT packaged as a library with an easy to use API
 
 `nuset-lib` is based on the NuSeT package by Linfeng Yang: https://github.com/yanglf1121/NuSeT
 
 Their paper:  https://www.biorxiv.org/content/10.1101/749754v1
+
+Please cite their paper if you use `nuset-lib`
 
 Training is not yet implemented but it can be used for predicting.
 
