@@ -18,7 +18,7 @@ Training is not yet implemented but it can be used for predicting.
 You will need to install `tensorflow-gpu` or `tensorflow` before installing `nuset-lib`
 
 ```
-# tensorflow 1.15 will install with older pip & setuptools
+# tensorflow 1.15 will not install with older pip & setuptools
 pip install --upgrade pip setuptools wheel
 pip install tensorflow-gpu~=1.15 # or tensorflow~=1.15
 pip install nuset-lib
