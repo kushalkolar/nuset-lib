@@ -14,7 +14,12 @@ else:
     HOME = 'HOME'
 
 
-DIR = os.path.join(os.environ[HOME], '.nuset')
+# if config dir is specific in environment var
+if 'NUSET_CONFIG' in os.environ:
+    DIR = os.environ['NUSET_CONFIG']
+else:
+    DIR = os.path.join(os.environ[HOME], '.nuset')
+
 
 if not os.path.isdir(DIR):
     os.makedirs(DIR, exist_ok=True)
@@ -45,7 +50,7 @@ def download_network_file(fname: str):
     """
     Download the large network files from Zenodo
     """
-    print('Downloading default network file')
+    print(f'Downloading default network file: {fname}')
     url = f'https://zenodo.org/record/3996370/files/{fname}'
 
     # basically from https://stackoverflow.com/questions/37573483/progress-bar-while-download-file-over-http-with-requests/37573701
