@@ -27,7 +27,7 @@ with open("README.md", 'r') as fh:
     long_description = fh.read()
 
 setup(
-    name='nuset',
+    name='nuset-lib',
     version='0.1.0',
     packages=find_packages(),
     include_package_data=True,
