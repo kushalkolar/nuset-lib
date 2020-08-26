@@ -1,6 +1,6 @@
 import os
 import requests
-import tqdm
+from tqdm import tqdm
 from warnings import warn
 from shutil import copy
 from .. import network
