@@ -1,5 +1,5 @@
 # nuset-lib
-[![PyPI version](https://badge.fury.io/py/nuset-lib)](https://badge.fury.io/py/nuset-lib)
+[![PyPI version](https://badge.fury.io/py/nuset-lib.svg)](https://badge.fury.io/py/nuset-lib)
 
 NuSeT packaged as a library with an easy to use API
 
