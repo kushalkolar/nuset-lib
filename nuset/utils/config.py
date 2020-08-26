@@ -66,7 +66,7 @@ def download_network_file(fname: str):
                    f' the file again.')
 
 
-def move_network_file(fname):
+def copy_network_file(fname):
     """
     Move the small network files from the repo to the config dir
     """
@@ -80,3 +80,7 @@ def move_network_file(fname):
 for _f in large_network_fnames:
     if not os.path.isfile(os.path.join(DEFAULT_NETWORK_DIR, _f)):
         download_network_file(_f)
+
+for _f in small_network_files:
+    if not os.path.isfile(os.path.join(DEFAULT_NETWORK_DIR, _f)):
+        copy_network_file(_f)
