@@ -1,4 +1,3 @@
 include README
 include LICENSE
-recursive-include nuset/network/*
-
+recursive-include nuset/network/ *
