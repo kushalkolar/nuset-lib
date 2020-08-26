@@ -71,8 +71,11 @@ class Nuset(BaseModel):
             Use a watershed transform
 
         min_score : float
+            Min detection score, lower score means more cells will be detected
 
         nms_threshold : float
+            NMS ratio, higher NMS ratio combined with a lower ``min_score`` allows
+            more cells to be detected and separated, however segmentation error will increase.
 
         rescale_ratio : float
             Rescale the input ``image`` before segmentation.
