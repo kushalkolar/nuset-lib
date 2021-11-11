@@ -1,5 +1,8 @@
 import numpy as np
+from skimage import __version__ as skimage_version
 from skimage import morphology
+
+SKIMAGE_VERSION = skimage_version.split(".")
 
 def remove_values_from_list(the_list, val):
    return [value for value in the_list if value != val]
@@ -28,9 +31,13 @@ def clean_image(image):
    im_label = morphology.label(image, connectivity=1)
    num_cells = np.max(im_label)
    mean_area = np.sum(image).astype(np.float32)/num_cells
-
-   # if a region < 1/5 of a normal cell, remove it
-   image = morphology.remove_small_objects(image, min_size=mean_area/5, connectivity=2)
-   # if a hole < 1/5 of a normal cell, remove it
-   image = morphology.remove_small_holes(image, min_size=mean_area/5, connectivity=2)
+   
+   # Backwards compatibility with skimage =< 0.15
+   if SKIMAGE_VERSION[0] == 0 and SKIMAGE_VERSION[1] >= 16:
+     # if a region or hole < 1/5 of a normal cell, remove it
+     image = morphology.remove_small_objects(image, area_threshold=mean_area/5, connectivity=2)
+     image = morphology.remove_small_holes(image, area_threshold=mean_area/5, connectivity=2)
+   else:
+     image = morphology.remove_small_objects(image, min_size=mean_area/5, connectivity=2)
+     image = morphology.remove_small_holes(image, min_size=mean_area/5, connectivity=2)
    return image.astype(np.uint8)
