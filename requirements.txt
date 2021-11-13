@@ -1,8 +1,7 @@
-scikit-image~=0.15.0
+scikit-image
 numpy
 Pillow
 tqdm
 tifffile
 requests
 matplotlib
-
