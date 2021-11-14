@@ -16,15 +16,15 @@ def RPN(feat_map, num_refanchors):
         a compiled network. 
 
     """
-    initializer = tf.random_normal_initializer(mean=0.0, stddev=0.01)
-    initializer_bbox = tf.random_normal_initializer(mean=0.0, stddev=0.001)
+    initializer = tf.compat.v1.random_normal_initializer(mean=0.0, stddev=0.01)
+    initializer_bbox = tf.compat.v1.random_normal_initializer(mean=0.0, stddev=0.001)
     prediction_dict = {}
     
     # pass it once to get the feature map ready to split into cls and reg
-    rpn = tf.layers.conv2d(feat_map, 512, [3, 3], kernel_initializer=initializer,
+    rpn = tf.compat.v1.layers.conv2d(feat_map, 512, [3, 3], kernel_initializer=initializer,
                            padding='same', name="rpn_conv/3x3")
     # This is the score to determine an anchor is foreground vs background
-    rpn_cls_score = tf.layers.conv2d(rpn, num_refanchors * 2, [1, 1],
+    rpn_cls_score = tf.compat.v1.layers.conv2d(rpn, num_refanchors * 2, [1, 1],
                                 kernel_initializer=initializer,
                                 padding='valid', name='rpn_cls_score')
     # change it so that the score has 2 as its channel size
@@ -33,7 +33,7 @@ def RPN(feat_map, num_refanchors):
     rpn_cls_prob = tf.nn.softmax(rpn_cls_score_reshape)
     
     # rpn_bbox_pred has shape (?, H, W, num_anchors * 4)
-    rpn_bbox_pred = tf.layers.conv2d(rpn, num_refanchors * 4, [1, 1],
+    rpn_bbox_pred = tf.compat.v1.layers.conv2d(rpn, num_refanchors * 4, [1, 1],
                                 kernel_initializer=initializer_bbox,
                                      padding='VALID', name='rpn_bbox_pred')
     # change it so that the pred has 4 as its channel size (4 coordinates)

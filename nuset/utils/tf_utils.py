@@ -22,7 +22,7 @@ def activation_fun(inputs, activation_term):
         outputs = tf.nn.elu(inputs)
         
     elif activation_term == 'crelu':
-        outputs = tf.nn.crelu(inputs)
+        outputs = tf.nn.crelu(features=inputs)
         
     elif activation_term == 'softplus':
         outputs = tf.nn.softplus(inputs)
@@ -42,23 +42,23 @@ def optimizer_fun(optimizer_term, min_term, learning_rate=1e-3):
     """
     
     if optimizer_term == 'rmsprop':
-        train_op = tf.train.RMSPropOptimizer(learning_rate, 
+        train_op = tf.compat.v1.train.RMSPropOptimizer(learning_rate, 
     ).minimize(min_term)
         
     elif optimizer_term == 'adam':
-        train_op = tf.train.AdamOptimizer(learning_rate, 
+        train_op = tf.compat.v1.train.AdamOptimizer(learning_rate, 
     ).minimize(min_term)
     
     elif optimizer_term == 'adagrad':
-        train_op = tf.train.AdagradOptimizer(learning_rate, 
+        train_op = tf.compat.v1.train.AdagradOptimizer(learning_rate, 
     ).minimize(min_term)
         
     elif optimizer_term == 'adadelta':
-        train_op = tf.train.AdadeltaOptimizer(learning_rate, 
+        train_op = tf.compat.v1.train.AdadeltaOptimizer(learning_rate, 
     ).minimize(min_term)
     
     elif optimizer_term == 'momentum':
-        train_op = tf.train.MomentumOptimizer(learning_rate, 0.9
+        train_op = tf.compat.v1.train.MomentumOptimizer(learning_rate, 0.9
     ).minimize(min_term)
     
     return train_op

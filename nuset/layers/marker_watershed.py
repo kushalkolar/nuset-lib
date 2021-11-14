@@ -98,6 +98,6 @@ def _watershed(scores, proposals, pred_mask, min_score=0.99):
 
 def marker_watershed(scores, proposals, pred_mask, min_score=0.99):
     
-    pred_mask = tf.py_func(_watershed, [scores, proposals, pred_mask, min_score], tf.int32)
+    pred_mask = tf.compat.v1.py_func(_watershed, [scores, proposals, pred_mask, min_score], tf.int32)
     
     return pred_mask

@@ -61,7 +61,7 @@ def RPNProposal(rpn_cls_prob, rpn_bbox_pred, all_anchors, im_shape, nms_threshol
     all_scores = tf.reshape(all_scores, [-1])
 
     if filter_outside_anchors:
-        with tf.name_scope('filter_outside_anchors'):
+        with tf.compat.v1.name_scope('filter_outside_anchors'):
             (x_min_anchor, y_min_anchor,
              x_max_anchor, y_max_anchor) = tf.unstack(all_anchors, axis=1)
 
@@ -77,9 +77,9 @@ def RPNProposal(rpn_cls_prob, rpn_bbox_pred, all_anchors, im_shape, nms_threshol
             )
             anchor_filter = tf.reshape(anchor_filter, [-1])
             all_anchors = tf.boolean_mask(
-                all_anchors, anchor_filter, name='filter_anchors')
-            rpn_bbox_pred = tf.boolean_mask(rpn_bbox_pred, anchor_filter)
-            all_scores = tf.boolean_mask(all_scores, anchor_filter)
+                tensor=all_anchors, mask=anchor_filter, name='filter_anchors')
+            rpn_bbox_pred = tf.boolean_mask(tensor=rpn_bbox_pred, mask=anchor_filter)
+            all_scores = tf.boolean_mask(tensor=all_scores, mask=anchor_filter)
 
     # Decode boxes
     all_proposals = decode(all_anchors, rpn_bbox_pred)
@@ -98,13 +98,13 @@ def RPNProposal(rpn_cls_prob, rpn_bbox_pred, all_anchors, im_shape, nms_threshol
     proposal_filter = tf.logical_and(zero_area_filter, min_prob_filter)
 
     # Filter proposals and scores.
-    all_proposals_total = tf.shape(all_scores)[0]
+    all_proposals_total = tf.shape(input=all_scores)[0]
     unsorted_scores = tf.boolean_mask(
-        all_scores, proposal_filter,
+        tensor=all_scores, mask=proposal_filter,
         name='filtered_scores'
     )
     unsorted_proposals = tf.boolean_mask(
-        all_proposals, proposal_filter,
+        tensor=all_proposals, mask=proposal_filter,
         name='filtered_proposals'
     )
     if debug:
@@ -114,28 +114,28 @@ def RPNProposal(rpn_cls_prob, rpn_bbox_pred, all_anchors, im_shape, nms_threshol
         # Clip proposals to the image.
         unsorted_proposals = clip_boxes(unsorted_proposals, im_shape)
 
-    filtered_proposals_total = tf.shape(unsorted_scores)[0]
+    filtered_proposals_total = tf.shape(input=unsorted_scores)[0]
 
-    tf.summary.scalar(
+    tf.compat.v1.summary.scalar(
         'valid_proposals_ratio',
         (
             tf.cast(filtered_proposals_total, tf.float32) /
             tf.cast(all_proposals_total, tf.float32)
         ), ['rpn'])
 
-    tf.summary.scalar(
+    tf.compat.v1.summary.scalar(
         'invalid_proposals',
         all_proposals_total - filtered_proposals_total, ['rpn'])
 
     # Get top `pre_nms_top_n` indices by sorting the proposals by score.
-    k = tf.minimum(pre_nms_top_n, tf.shape(unsorted_scores)[0])
+    k = tf.minimum(pre_nms_top_n, tf.shape(input=unsorted_scores)[0])
     top_k = tf.nn.top_k(unsorted_scores, k=k)
 
     sorted_top_proposals = tf.gather(unsorted_proposals, top_k.indices)
     sorted_top_scores = top_k.values
 
     if apply_nms:
-        with tf.name_scope('nms'):
+        with tf.compat.v1.name_scope('nms'):
             # We reorder the proposals into TensorFlows bounding box order
             # for `tf.image.non_max_supression` compatibility.
             proposals_tf_order = change_order(sorted_top_proposals)

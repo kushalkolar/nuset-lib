@@ -110,9 +110,9 @@ class Nuset(BaseModel):
             # pred_dict and pred_dict_final save all the temp variables
             pred_dict_final = {}
 
-            train_initial = tf.placeholder(dtype=tf.float32, shape=[1, None, None, 1])
+            train_initial = tf.compat.v1.placeholder(dtype=tf.float32, shape=[1, None, None, 1])
 
-            input_shape = tf.shape(train_initial)
+            input_shape = tf.shape(input=train_initial)
 
             input_height = input_shape[1]
             input_width = input_shape[2]
@@ -126,14 +126,14 @@ class Nuset(BaseModel):
             # 1. feat_map of shape (?,32,32,1024), which will be passed to the
             # region proposal network
             # 2. final_logits of shape(?,512,512,2), which is the prediction from U-net
-            with tf.variable_scope('model_U-Net') as scope:
+            with tf.compat.v1.variable_scope('model_U-Net') as scope:
                 final_logits, feat_map = UNET(nb_classes, train_initial)
 
             # The final_logits has 2 channels for foreground/background softmax scores,
             # then we get prediction with larger score for each pixel
-            pred_masks = tf.argmax(final_logits, axis=3)
+            pred_masks = tf.argmax(input=final_logits, axis=3)
             pred_masks = tf.reshape(pred_masks, [input_height, input_width])
-            pred_masks = tf.to_float(pred_masks)
+            pred_masks = tf.cast(pred_masks, dtype=tf.float32)
 
             # Dynamic anchor base size calculated from median cell lengths
             base_size = anchor_size(tf.reshape(pred_masks, [input_height, input_width]))
@@ -157,7 +157,7 @@ class Nuset(BaseModel):
             all_anchors = generate_anchors(ref_anchors, stride, [feat_height, feat_width])
 
             num_anchors = all_anchors.shape[0]
-            with tf.variable_scope('model_RPN') as scope:
+            with tf.compat.v1.variable_scope('model_RPN') as scope:
                 prediction_dict = RPN(feat_map, num_ref_anchors)
 
             # Get the tensors from the dict
@@ -174,24 +174,24 @@ class Nuset(BaseModel):
             scores = pred_dict_final['rpn_prediction']['scores']
             proposals = pred_dict_final['rpn_prediction']['proposals']
 
-            pred_masks_watershed = tf.to_float(
-                marker_watershed(scores, proposals, pred_masks, min_score=min_score)
+            pred_masks_watershed = tf.cast(
+                marker_watershed(scores, proposals, pred_masks, min_score=min_score), dtype=tf.float32
             )
 
             # start point for testing, and end point for graph
 
-            sess = tf.Session()
-            sess.run(tf.global_variables_initializer())
+            sess = tf.compat.v1.Session()
+            sess.run(tf.compat.v1.global_variables_initializer())
 
             num_batches_test = len(images)
 
-            saver = tf.train.Saver()
+            saver = tf.compat.v1.train.Saver()
 
             masks1 = []
 
             # Restore the per-image normalization model from the trained network
             saver.restore(sess, self._network_path_whole_norm)
-            sess.run(tf.local_variables_initializer())
+            sess.run(tf.compat.v1.local_variables_initializer())
             for j in tqdm(range(0, num_batches_test)):
                 # whole image normalization
                 batch_data = images[j]
@@ -207,7 +207,7 @@ class Nuset(BaseModel):
             # Restore the foreground normalization model from the trained network
             saver.restore(sess, self._network_path_foreground)
             # saver.restore(sess,'./Network/fg_norm_weights_fluorescent/'+str(30)+'.ckpt')
-            sess.run(tf.local_variables_initializer())
+            sess.run(tf.compat.v1.local_variables_initializer())
             for j in tqdm(range(0, num_batches_test)):
                 batch_data = images[j]
                 batch_data_shape = batch_data.shape

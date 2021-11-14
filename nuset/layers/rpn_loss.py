@@ -27,7 +27,7 @@ def RPNLoss(prediction_dict):
     rpn_bbox_target = prediction_dict['rpn_bbox_target']
     rpn_bbox_pred = prediction_dict['rpn_bbox_pred']
 
-    with tf.variable_scope('RPNLoss'):
+    with tf.compat.v1.variable_scope('RPNLoss'):
         # Flatten already flat Tensor for usage as boolean mask filter.
         rpn_cls_target = tf.cast(tf.reshape(
             rpn_cls_target, [-1]), tf.int32, name='rpn_cls_target')
@@ -37,15 +37,15 @@ def RPNLoss(prediction_dict):
 
         # Now we only have the labels we are going to compare with the
         # cls probability.
-        labels = tf.boolean_mask(rpn_cls_target, labels_not_ignored)
-        cls_score = tf.boolean_mask(rpn_cls_score, labels_not_ignored)
+        labels = tf.boolean_mask(tensor=rpn_cls_target, mask=labels_not_ignored)
+        cls_score = tf.boolean_mask(tensor=rpn_cls_score, mask=labels_not_ignored)
 
         # We need to transform `labels` to `cls_score` shape.
         # convert [1, 0] to [[0, 1], [1, 0]] for ce with logits.
         cls_target = tf.one_hot(labels, depth=2)
 
         # Equivalent to log loss
-        ce_per_anchor = tf.nn.softmax_cross_entropy_with_logits_v2(
+        ce_per_anchor = tf.nn.softmax_cross_entropy_with_logits(
             labels=cls_target, logits=cls_score
         )
         prediction_dict['cross_entropy_per_anchor'] = ce_per_anchor
@@ -59,8 +59,8 @@ def RPNLoss(prediction_dict):
         # We only care for positive labels (we ignore backgrounds since
         # we don't have any bounding box information for it).
         positive_labels = tf.equal(rpn_cls_target, 1)
-        rpn_bbox_target = tf.boolean_mask(rpn_bbox_target, positive_labels)
-        rpn_bbox_pred = tf.boolean_mask(rpn_bbox_pred, positive_labels)
+        rpn_bbox_target = tf.boolean_mask(tensor=rpn_bbox_target, mask=positive_labels)
+        rpn_bbox_pred = tf.boolean_mask(tensor=rpn_bbox_pred, mask=positive_labels)
 
         # We apply smooth l1 loss as described by the Fast R-CNN paper.
         reg_loss_per_anchor = smooth_l1_loss(
@@ -70,25 +70,25 @@ def RPNLoss(prediction_dict):
         prediction_dict['reg_loss_per_anchor'] = reg_loss_per_anchor
 
         # Loss summaries.
-        tf.summary.scalar('batch_size', tf.shape(labels)[0], ['rpn'])
+        tf.compat.v1.summary.scalar('batch_size', tf.shape(input=labels)[0], ['rpn'])
         foreground_cls_loss = tf.boolean_mask(
-            ce_per_anchor, tf.equal(labels, 1))
+            tensor=ce_per_anchor, mask=tf.equal(labels, 1))
         background_cls_loss = tf.boolean_mask(
-            ce_per_anchor, tf.equal(labels, 0))
-        tf.summary.scalar(
+            tensor=ce_per_anchor, mask=tf.equal(labels, 0))
+        tf.compat.v1.summary.scalar(
             'foreground_cls_loss',
-            tf.reduce_mean(foreground_cls_loss), ['rpn'])
-        tf.summary.histogram(
+            tf.reduce_mean(input_tensor=foreground_cls_loss), ['rpn'])
+        tf.compat.v1.summary.histogram(
             'foreground_cls_loss', foreground_cls_loss, ['rpn'])
-        tf.summary.scalar(
+        tf.compat.v1.summary.scalar(
             'background_cls_loss',
-            tf.reduce_mean(background_cls_loss), ['rpn'])
-        tf.summary.histogram(
+            tf.reduce_mean(input_tensor=background_cls_loss), ['rpn'])
+        tf.compat.v1.summary.histogram(
             'background_cls_loss', background_cls_loss, ['rpn'])
-        tf.summary.scalar(
-            'foreground_samples', tf.shape(rpn_bbox_target)[0], ['rpn'])
+        tf.compat.v1.summary.scalar(
+            'foreground_samples', tf.shape(input=rpn_bbox_target)[0], ['rpn'])
 
         return {
-            'rpn_cls_loss': tf.reduce_mean(ce_per_anchor),
-            'rpn_reg_loss': tf.reduce_mean(reg_loss_per_anchor),
+            'rpn_cls_loss': tf.reduce_mean(input_tensor=ce_per_anchor),
+            'rpn_reg_loss': tf.reduce_mean(input_tensor=reg_loss_per_anchor),
 }

@@ -23,20 +23,20 @@ def smooth_l1_loss(bbox_prediction, bbox_target, sigma=3.0):
     abs_diff = tf.abs(diff)
     abs_diff_lt_sigma2 = tf.less(abs_diff, 1.0 / sigma2)
     bbox_loss = tf.reduce_sum(
-        tf.where(
+        input_tensor=tf.compat.v1.where(
             abs_diff_lt_sigma2,
             0.5 * sigma2 * tf.square(abs_diff),
             abs_diff - 0.5 / sigma2
-        ), [1]
+        ), axis=[1]
     )
     return bbox_loss
 
 
 if __name__ == '__main__':
-    bbox_prediction_tf = tf.placeholder(tf.float32)
-    bbox_target_tf = tf.placeholder(tf.float32)
+    bbox_prediction_tf = tf.compat.v1.placeholder(tf.float32)
+    bbox_target_tf = tf.compat.v1.placeholder(tf.float32)
     loss_tf = smooth_l1_loss(bbox_prediction_tf, bbox_target_tf)
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
         loss = sess.run(
             loss_tf,
             feed_dict={
