@@ -5,3 +5,4 @@ tqdm
 tifffile
 requests
 matplotlib
+tensorflow
