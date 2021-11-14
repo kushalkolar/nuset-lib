@@ -5,7 +5,7 @@ NuSeT packaged as a library with an easy to use API
 
 `nuset-lib` is based on the NuSeT package by Linfeng Yang: https://github.com/yanglf1121/NuSeT
 
-Their paper:  https://www.biorxiv.org/content/10.1101/749754v1
+Their paper:  https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008193
 
 Please cite their paper if you use `nuset-lib`
 
@@ -15,12 +15,7 @@ Training is not yet implemented but it can be used for predicting.
 
 `nuset-lib` can be installed via `pip`.
 
-You will need to install `tensorflow-gpu` or `tensorflow` before installing `nuset-lib`
-
 ```
-# tensorflow 1.15 will not install with older pip & setuptools
-pip install --upgrade pip setuptools wheel
-pip install tensorflow-gpu~=1.15 # or tensorflow~=1.15
 pip install nuset-lib
 ```
 
