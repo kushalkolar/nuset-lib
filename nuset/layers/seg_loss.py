@@ -19,13 +19,13 @@ def segmentation_loss(final_logits, contour, labels, edge_weights, mode = 'BCE',
     # Loss as pixel-wise cross-entropy according to 'Fully convolutional networks for semantic segmentation'
     # shape of Y: batch_size, height, width, num_classes
     flat_logits = tf.reshape(final_logits, shape=(-1,nb_classes))    
-    input_shape = tf.shape(labels)
+    input_shape = tf.shape(input=labels)
     # Convert y_train to be able to use pixel-wise cross entropy
     train_class_label = tf.equal(labels, 1)
     train_background_label = tf.not_equal(labels, 1)
     # Convert the boolean values into floats 
-    train_mask_class = tf.to_float(train_class_label)
-    train_mask_background = tf.to_float(train_background_label)
+    train_mask_class = tf.cast(train_class_label, dtype=tf.float32)
+    train_mask_background = tf.cast(train_background_label, dtype=tf.float32)
     
     train_combined_mask = tf.concat(values=[train_mask_background, train_mask_class], axis=3)
     
@@ -45,14 +45,14 @@ def segmentation_loss(final_logits, contour, labels, edge_weights, mode = 'BCE',
     
 def cross_entropie_loss(y_true, y_pred, edge_weights, input_shape):
     
-    cross_entropies = tf.nn.softmax_cross_entropy_with_logits_v2(logits=y_pred,labels=y_true)
+    cross_entropies = tf.nn.softmax_cross_entropy_with_logits(logits=y_pred,labels=y_true)
     
     # Reshape the cross_entropies to match the size of edge_weights
     cross_entropies_reshape = tf.reshape(cross_entropies,input_shape)
     # Apply the edge matrix to the entropy for the final loss function
     cross_entropies = tf.multiply(cross_entropies_reshape, edge_weights)
 
-    cross_entropy_sum = tf.reduce_mean(cross_entropies)
+    cross_entropy_sum = tf.reduce_mean(input_tensor=cross_entropies)
     
     return cross_entropy_sum
 
@@ -79,8 +79,8 @@ def soft_dice_loss(y_true, y_pred, epsilon=1e-6):
     
     # skip the batch and class axis for calculating Dice score
     # axes = tuple(range(1, len(y_pred.shape)-1)) 
-    numerator = 2. * tf.reduce_sum(y_pred * y_true)
-    denominator = tf.reduce_sum(tf.square(y_pred) + tf.square(y_true))
+    numerator = 2. * tf.reduce_sum(input_tensor=y_pred * y_true)
+    denominator = tf.reduce_sum(input_tensor=tf.square(y_pred) + tf.square(y_true))
     
-    return 1 - tf.reduce_mean(numerator / (denominator + epsilon)) # average over classes and batch
+    return 1 - tf.reduce_mean(input_tensor=numerator / (denominator + epsilon)) # average over classes and batch
 

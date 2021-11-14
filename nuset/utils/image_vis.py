@@ -149,7 +149,7 @@ def get_image_summaries(summaries_fn, pred_dict, image,
                         **argument), tag)
                 summaries.append(summary)
             except KeyError as err:
-                tf.logging.warning(
+                tf.compat.v1.logging.warning(
                     'Function {} failed with KeyError. Key value: {}'.format(
                         fn_name, err))
     return summaries
@@ -191,8 +191,8 @@ def image_vis_summaries(pred_dict, config=None, extra_tag=None,
 
 
 def image_to_summary(image_pil, tag):
-    summary = tf.Summary(value=[
-        tf.Summary.Value(tag=tag, image=tf.Summary.Image(
+    summary = tf.compat.v1.Summary(value=[
+        tf.compat.v1.Summary.Value(tag=tag, image=tf.compat.v1.Summary.Image(
             encoded_image_string=imagepil_to_str(image_pil)))
     ])
     return summary
@@ -479,7 +479,7 @@ def draw_bbox(image, bbox):
 
 def draw_top_proposals(pred_dict, image, min_score=0.8, max_display=20,
                        top_k=True, used_in_batch=False):
-    tf.logging.debug(
+    tf.compat.v1.logging.debug(
         'Top proposals (blue = matches target in batch, '
         'green = matches background in batch, red = ignored in batch)')
     proposal_prediction = pred_dict['rpn_prediction']['proposal_prediction']
@@ -524,15 +524,15 @@ def draw_top_proposals(pred_dict, image, min_score=0.8, max_display=20,
 
 def draw_batch_proposals(pred_dict, image, display='proposal', top_k=None,
                          draw_all=True):
-    tf.logging.debug(
+    tf.compat.v1.logging.debug(
         'Batch proposals (background or foreground) '
         '(score is classification, blue = foreground, '
         'red = background, green = GT)')
-    tf.logging.debug(
+    tf.compat.v1.logging.debug(
         'This only displays the images on the batch (256). '
         'The number displayed is the classification score '
         '(green is > 0.5, red <= 0.5)')
-    tf.logging.debug(
+    tf.compat.v1.logging.debug(
         '{} are displayed'.format(
             'Anchors' if display == 'anchor' else 'Final proposals'))
     scores = pred_dict['rpn_prediction']['rpn_cls_prob']

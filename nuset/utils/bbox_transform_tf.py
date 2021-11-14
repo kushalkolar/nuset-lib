@@ -3,7 +3,7 @@ import tensorflow as tf
 
 # originally from https://github.com/tryolabs/luminoth/blob/master/luminoth/models/fasterrcnn/
 def get_width_upright(bboxes):
-    with tf.name_scope('BoundingBoxTransform/get_width_upright'):
+    with tf.compat.v1.name_scope('BoundingBoxTransform/get_width_upright'):
         bboxes = tf.cast(bboxes, tf.float32)
         x1, y1, x2, y2 = tf.split(bboxes, 4, axis=1)
         width = x2 - x1 + 1.
@@ -17,7 +17,7 @@ def get_width_upright(bboxes):
 
 
 def encode(bboxes, gt_boxes, variances=None):
-    with tf.name_scope('BoundingBoxTransform/encode'):
+    with tf.compat.v1.name_scope('BoundingBoxTransform/encode'):
         (bboxes_width, bboxes_height,
          bboxes_urx, bboxes_ury) = get_width_upright(bboxes)
 
@@ -30,8 +30,8 @@ def encode(bboxes, gt_boxes, variances=None):
         targets_dx = (gt_boxes_urx - bboxes_urx)/(bboxes_width * variances[0])
         targets_dy = (gt_boxes_ury - bboxes_ury)/(bboxes_height * variances[0])
 
-        targets_dw = tf.log(gt_boxes_width / bboxes_width) / variances[1]
-        targets_dh = tf.log(gt_boxes_height / bboxes_height) / variances[1]
+        targets_dw = tf.math.log(gt_boxes_width / bboxes_width) / variances[1]
+        targets_dh = tf.math.log(gt_boxes_height / bboxes_height) / variances[1]
 
         targets = tf.concat(
             [targets_dx, targets_dy, targets_dw, targets_dh], axis=1)
@@ -40,7 +40,7 @@ def encode(bboxes, gt_boxes, variances=None):
 
 
 def decode(roi, deltas, variances=None):
-    with tf.name_scope('BoundingBoxTransform/decode'):
+    with tf.compat.v1.name_scope('BoundingBoxTransform/decode'):
         (roi_width, roi_height,
          roi_urx, roi_ury) = get_width_upright(roi)
 
@@ -82,7 +82,7 @@ def clip_boxes(bboxes, imshape):
         Tensor with same shape as bboxes but making sure that none
         of the bboxes are outside the image.
     """
-    with tf.name_scope('BoundingBoxTransform/clip_bboxes'):
+    with tf.compat.v1.name_scope('BoundingBoxTransform/clip_bboxes'):
         bboxes = tf.cast(bboxes, dtype=tf.float32)
         imshape = tf.cast(imshape, dtype=tf.float32)
 
@@ -117,7 +117,7 @@ def change_order(bboxes):
     Returns:
         bboxes: A Tensor of shape (total_bboxes, 4) with the order swaped.
     """
-    with tf.name_scope('BoundingBoxTransform/change_order'):
+    with tf.compat.v1.name_scope('BoundingBoxTransform/change_order'):
         first_min, second_min, first_max, second_max = tf.unstack(
             bboxes, axis=1
         )
@@ -130,20 +130,20 @@ def change_order(bboxes):
 if __name__ == '__main__':
     import numpy as np
 
-    bboxes = tf.placeholder(tf.float32)
+    bboxes = tf.compat.v1.placeholder(tf.float32)
     bboxes_val = [[10, 10, 20, 22]]
 
-    gt_boxes = tf.placeholder(tf.float32)
+    gt_boxes = tf.compat.v1.placeholder(tf.float32)
     gt_boxes_val = [[11, 13, 34, 31]]
 
-    imshape = tf.placeholder(tf.int32)
+    imshape = tf.compat.v1.placeholder(tf.int32)
     imshape_val = (100, 100)
 
     deltas = encode(bboxes, gt_boxes)
     decoded_bboxes = decode(bboxes, deltas)
     final_decoded_bboxes = clip_boxes(decoded_bboxes, imshape)
 
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
         final_decoded_bboxes = sess.run(final_decoded_bboxes, feed_dict={
             bboxes: bboxes_val,
             gt_boxes: gt_boxes_val,

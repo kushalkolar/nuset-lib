@@ -17,7 +17,7 @@ def generate_anchors(anchors_reference, anchor_stride, feature_map_shape):
             `(num_anchors_per_points * feature_width * feature_height, 4)`
             using the (x1, y1, x2, y2) convention.
     """
-    with tf.variable_scope('generate_anchors'):
+    with tf.compat.v1.variable_scope('generate_anchors'):
         grid_width = feature_map_shape[1]  # width
         grid_height = feature_map_shape[0]  # height
         shift_x = tf.range(grid_width) * anchor_stride
@@ -32,7 +32,7 @@ def generate_anchors(anchors_reference, anchor_stride, feature_map_shape):
             axis=0
         )
 
-        shifts = tf.transpose(shifts)
+        shifts = tf.transpose(a=shifts)
         # Shifts now is a (H x W, 4) Tensor
 
         # Expand dims to use broadcasting sum.

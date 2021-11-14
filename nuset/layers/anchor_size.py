@@ -32,6 +32,6 @@ def _anchor_size(mask):
 
 def anchor_size(mask):
     
-    optimal_size = tf.py_func(_anchor_size, [mask], tf.float64)
+    optimal_size = tf.compat.v1.py_func(_anchor_size, [mask], tf.float64)
     
     return optimal_size
