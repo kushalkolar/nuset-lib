@@ -3,11 +3,12 @@ from setuptools import setup, find_packages
 
 install_requires = \
     [
-        "numpy", # newer numpy won't work with scikit-learn 0.13
-        "scikit-image~=0.15.0", # newer scikit-image don't have the `min_size` kwarg for skimage.morphology.remove_small_holes
+        "numpy",
+        "scikit-image",
         "Pillow",
         "tqdm",
-        "requests"
+        "requests",
+        "tensorflow"
     ]
 
 classifiers = \
@@ -28,7 +29,7 @@ with open("README.md", 'r') as fh:
 
 setup(
     name='nuset-lib',
-    version='0.1.1',
+    version='0.2.0',
     packages=find_packages(),
     include_package_data=True,
     url='',
